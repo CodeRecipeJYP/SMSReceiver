@@ -23,14 +23,13 @@ public class SMSReceiver extends BroadcastReceiver {
         if (SMSReceiveAction .equals(intent.getAction())) {
             Bundle bundle = intent.getExtras();
             Object[] messages = (Object[])bundle.get("pdus");
-            SmsMessage[] smsMessage = new SmsMessage[messages.length];
 
-            for(int i = 0; i < messages.length; i++) {
-                smsMessage[i] = SmsMessage.createFromPdu((byte[])messages[i]);
+            for (Object message:messages) {
+                SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) message);
+                String phoneNumber = currentMessage.getDisplayOriginatingAddress();
+                String messageBody = currentMessage.getDisplayMessageBody();
+                Log.d(TAG, "onReceive: "+"From : "+phoneNumber +" Body : "+messageBody);
             }
-
-            String message = smsMessage[0].getMessageBody().toString();
-            Log.d(TAG, "SMS Message: " + message);
         }
     }
 
